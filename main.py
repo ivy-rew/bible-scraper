@@ -56,5 +56,5 @@ result = soup.find(class_="text-html");
 
 #print("verse="+str(result.prettify()))
 
-print(str(result.text.strip()))
-print(book+" "+ref)
+print(str(result.text.strip())+"  ")
+print(book.capitalize()+" "+ref)
