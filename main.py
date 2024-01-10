@@ -4,13 +4,6 @@ import sys
 from contextlib import closing
 from bs4 import BeautifulSoup
 
-
-
-base_url = "https://www.biblegateway.com/passage/?search="
-
-#translation = str(input("Please enter the translation to use.\n")).upper()
-translation = "SCH2000"
-
 if len(sys.argv) > 1:
     book = sys.argv[1];
 else:
@@ -29,32 +22,42 @@ else:
 ref=chapter_num;
 ref=ref+ ":" +verse_num
 
-full_url = base_url + book + "+" + ref + "&version=" + translation
+def gateway(book, ref):
+    base_url = "https://www.biblegateway.com/passage/?search="
 
-page = requests.get(full_url)
-soup = BeautifulSoup(page.text, "lxml")
+    #translation = str(input("Please enter the translation to use.\n")).upper()
+    translation = "SCH2000"
+    full_url = base_url + book + "+" + ref + "&version=" + translation
 
-foot = soup.findAll(class_="footnotes")
-[line.extract() for line in foot]
+    page = requests.get(full_url)
+    return toPlainText(page.text)
 
-h2 = soup.findAll("h2")
-[line.extract() for line in h2]
+def toPlainText(html):
+    soup = BeautifulSoup(html, "lxml")
 
-h3 = soup.findAll("h3")
-[line.extract() for line in h3]
+    foot = soup.findAll(class_="footnotes")
+    [line.extract() for line in foot]
 
-sup = soup.findAll("sup")
-[note.extract() for note in sup]
+    h2 = soup.findAll("h2")
+    [line.extract() for line in h2]
 
-chapNos = soup.findAll(class_="chapternum")
-[no.extract() for no in chapNos]
+    h3 = soup.findAll("h3")
+    [line.extract() for line in h3]
 
-link = soup.find_all(class_="full-chap-link")
-[l.extract() for l in link]
+    sup = soup.findAll("sup")
+    [note.extract() for note in sup]
 
-result = soup.find(class_="text-html");
+    chapNos = soup.findAll(class_="chapternum")
+    [no.extract() for no in chapNos]
+
+    link = soup.find_all(class_="full-chap-link")
+    [l.extract() for l in link]
+
+    result = soup.find(class_="text-html")
+    return result
 
 #print("verse="+str(result.prettify()))
+result = gateway(book, ref)
 
 print(str(result.text.strip())+"  ")
 print(book.capitalize()+" "+ref)
