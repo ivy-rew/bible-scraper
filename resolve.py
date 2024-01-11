@@ -11,12 +11,12 @@ def bookOfFile(file):
 def verseInject(m):
     ref=m.group(1)+":"+m.group(3)
     quote=gateway.lookup(book, ref)
-    indent = "\n    > "
-    mdQuote = indent+str(quote)+indent+book.capitalize()+" "+ref
+    indent = "\n   > "
+    mdQuote = indent+str(quote)+"  "+indent+book.capitalize()+" "+ref
     return m.group(1)+m.group(2) + "\n" + mdQuote
 
 def expandVerse(line):
-    return re.sub("([0-9])+(\\. .+) !V([0-9\\-]+)", verseInject, line, flags=re.IGNORECASE)
+    return re.sub("([0-9]+)(\\. .+) !V([0-9\\-]+)", verseInject, line, flags=re.IGNORECASE)
 
 def findRef(line):
     # https://docs.python.org/3/library/re.html
