@@ -9,7 +9,8 @@ def lookup(book, ref):
     full_url = base_url + book + "+" + ref + "&version=" + translation
 
     page = requests.get(full_url)
-    return toPlainText(page.text)
+    result = toPlainText(page.text)
+    return str(result.text.strip())
 
 def toPlainText(html):
     soup = BeautifulSoup(html, "lxml")

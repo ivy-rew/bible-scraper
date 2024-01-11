@@ -23,5 +23,5 @@ ref=ref+ ":" +verse_num
 #print("verse="+str(result.prettify()))
 result = gateway.lookup(book, ref)
 
-print(str(result.text.strip())+"  ")
+print(result+"  ")
 print(book.capitalize()+" "+ref)
