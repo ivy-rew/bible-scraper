@@ -3,6 +3,9 @@ import sys, re
 from pathlib import Path
 import gateway
 
+style = 'inline' # or 'notes'
+notes = []
+
 
 def bookOfFile(file):
     mdNoExt=Path(file).stem
@@ -11,9 +14,11 @@ def bookOfFile(file):
 def verseInject(m):
     ref=m.group(1)+":"+m.group(3)
     quote=gateway.lookup(book, ref)
-    indent = "\n   > "
-    mdQuote = indent+str(quote)+"  "+indent+book.capitalize()+" "+ref
-    return m.group(1)+m.group(2) + "\n" + mdQuote
+    indent = "   > "
+    foot = "[^"+book+ref+"]"
+    mdQuote = indent+str(quote)+"  "+"\n"+book.capitalize()+" "+ref
+    notes.append(foot+":"+mdQuote+"\n\n")
+    return m.group(1)+m.group(2) + foot
 
 def expandVerse(line):
     return re.sub("([0-9]+)(\\. .+) !V([0-9\\-]+)", verseInject, line, flags=re.IGNORECASE)
@@ -40,6 +45,7 @@ def write(mdPath, lines):
 mdPath = sys.argv[1]
 book = bookOfFile(mdPath)
 lines = mdRefsReplace(mdPath)
+lines += notes;
 
 if len(sys.argv) > 2 and sys.argv[2] == "-i":
     write(mdPath,lines)
