@@ -12,20 +12,26 @@ def bookOfFile(file):
     return mdNoExt.split("-",1)[1]
 
 def verseInject(m):
-    ref=m.group(1)+":"+m.group(3)
+    ref=m.group(1)+":"+m.group(4)
     quote=gateway.lookup(book, ref)
     indent = "   > "
-    foot = "[^"+book+ref+"]"
-    mdQuote = indent+str(quote)+"  "+"\n"+book.capitalize()+" "+ref
-    notes.append(foot+":"+mdQuote+"\n\n")
-    return m.group(1)+m.group(2) + foot
+    print('matched:'+m.group(3))
+    if m.group(3) == '!!':
+        br = "  "
+        mdQuote = indent+str(quote)+br+"\n"+book.capitalize()+" "+ref
+        return m.group(1)+m.group(2) + mdQuote + br
+    else:
+        foot = "[^"+book+ref+"]"
+        mdQuote = indent+str(quote)+"  "+"\n"+book.capitalize()+" "+ref
+        notes.append(foot+":"+mdQuote+"\n\n")
+        return m.group(1)+m.group(2) + foot
 
 def expandVerse(line):
     replaced = line
     matched = True
     while matched:
         incoming = replaced
-        replaced = re.sub("([0-9]+)(\\. .+)!V([0-9\\-]+)", verseInject, incoming, flags=re.IGNORECASE)
+        replaced = re.sub("([0-9]+)(\\. [^!]+)(\\!+)V([0-9\\-]+)", verseInject, incoming, flags=re.IGNORECASE)
         matched = replaced != incoming
     return replaced
 
