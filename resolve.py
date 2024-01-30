@@ -21,7 +21,13 @@ def verseInject(m):
     return m.group(1)+m.group(2) + foot
 
 def expandVerse(line):
-    return re.sub("([0-9]+)(\\. .+)!V([0-9\\-]+)", verseInject, line, flags=re.IGNORECASE)
+    replaced = line
+    matched = True
+    while matched:
+        incoming = replaced
+        replaced = re.sub("([0-9]+)(\\. .+)!V([0-9\\-]+)", verseInject, incoming, flags=re.IGNORECASE)
+        matched = replaced != incoming
+    return replaced
 
 def findRef(line):
     # https://docs.python.org/3/library/re.html
