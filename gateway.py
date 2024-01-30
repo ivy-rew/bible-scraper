@@ -6,7 +6,7 @@ def lookup(book, ref):
 
     #translation = str(input("Please enter the translation to use.\n")).upper()
     translation = "SCH2000"
-    full_url = base_url + book + "+" + ref + "&version=" + translation
+    full_url = base_url + book + "+" + ref + "&version=" + translation + "&interface=print"
 
     page = requests.get(full_url)
     result = toPlainText(page.text)
