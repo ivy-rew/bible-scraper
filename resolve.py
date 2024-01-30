@@ -42,13 +42,14 @@ def write(mdPath, lines):
         file.writelines(lines) 
 
 #print(expandVerse('1. test !V19'))
-mdPath = sys.argv[1]
-book = bookOfFile(mdPath)
-lines = mdRefsReplace(mdPath)
-lines += notes;
+if len(sys.argv) > 1:
+    mdPath = sys.argv[1]
+    book = bookOfFile(mdPath)
+    lines = mdRefsReplace(mdPath)
+    lines += notes;
 
-if len(sys.argv) > 2 and sys.argv[2] == "-i":
-    write(mdPath,lines)
-else:
-    for line in lines:
-        print(line)
+    if len(sys.argv) > 2 and sys.argv[2] == "-i":
+        write(mdPath,lines)
+    else:
+        for line in lines:
+            print(line)

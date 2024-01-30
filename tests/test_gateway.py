@@ -1,7 +1,7 @@
 import unittest
 import gateway
 
-class TestStringMethods(unittest.TestCase):
+class TestHtmlParser(unittest.TestCase):
 
     def test_gateway_parse(self):
         with open('tests/genesis1-1.html', 'r') as file:
