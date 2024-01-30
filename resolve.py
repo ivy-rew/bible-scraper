@@ -15,15 +15,14 @@ def verseInject(m):
     ref=m.group(1)+":"+m.group(4)
     quote=gateway.lookup(book, ref)
     indent = "   > "
-    print('matched:'+m.group(3))
     if m.group(3) == '!!':
         br = "  "
         mdQuote = indent+str(quote)+br+"\n"+book.capitalize()+" "+ref
-        return m.group(1)+m.group(2) + mdQuote + br
+        return m.group(1)+m.group(2)+ '\n\n' + mdQuote + br + '\n'
     else:
         foot = "[^"+book+ref+"]"
         mdQuote = indent+str(quote)+"  "+"\n"+book.capitalize()+" "+ref
-        notes.append(foot+":"+mdQuote+"\n\n")
+        notes.append(foot+":"+mdQuote+"\n")
         return m.group(1)+m.group(2) + foot
 
 def expandVerse(line):
@@ -58,6 +57,8 @@ if len(sys.argv) > 1:
     mdPath = sys.argv[1]
     book = bookOfFile(mdPath)
     lines = mdRefsReplace(mdPath)
+    if (len(notes) > 0):
+        lines += '\n'
     lines += notes;
 
     if len(sys.argv) > 2 and sys.argv[2] == "-i":
