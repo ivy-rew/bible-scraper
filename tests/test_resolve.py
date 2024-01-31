@@ -26,7 +26,7 @@ class TestMarkdownResolver(unittest.TestCase):
     def test_fullQuote(self):
         resolve.notes = []
         expaned = resolve.expandVerse('1. Himmel und Erde !!V1')
-        self.assertEqual(expaned, '1. Himmel und Erde \n\n   > Im Anfang schuf Gott die Himmel und die Erde.  \nGenesis 1:1  \n')
+        self.assertEqual(expaned, '1. Himmel und Erde \n\n    > Im Anfang schuf Gott die Himmel und die Erde.  \nGenesis 1:1  \n')
 
     def test_bookOfFile(self):
         self.assertEqual(resolve.bookOfFile("tests/1-genesis.md"), 'genesis')

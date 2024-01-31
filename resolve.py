@@ -17,6 +17,7 @@ def verseInject(m):
     indent = "   > "
     if m.group(3) == '!!':
         br = "  "
+        indent = " " + indent # 4whitspaces: in-between list content!
         mdQuote = indent+str(quote)+br+"\n"+book.capitalize()+" "+ref
         return m.group(1)+m.group(2)+ '\n\n' + mdQuote + br + '\n'
     else:
