@@ -14,6 +14,9 @@ def bookOfFile(file):
 def verseInject(m):
     ref=m.group(1)+":"+m.group(4)
     quote=gateway.lookup(book, ref)
+    if quote is None:
+        print("gateway lookup failed for "+book+" "+ref)
+        return m.group(0)
     indent = "   > "
     if m.group(3) == '!!':
         br = "  "

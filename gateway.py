@@ -10,7 +10,7 @@ def lookup(book, ref):
 
     page = requests.get(full_url)
     result = toPlainText(page.text)
-    return str(result.text.strip())
+    return result
 
 def toPlainText(html):
     soup = BeautifulSoup(html, "lxml")
@@ -34,4 +34,6 @@ def toPlainText(html):
     [l.extract() for l in link]
 
     result = soup.find(class_="text-html")
-    return result
+    if result is None:
+        return result
+    return str(result.text.strip())
