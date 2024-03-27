@@ -4,11 +4,13 @@ from pathlib import Path
 import gateway
 
 style = 'inline' # or 'notes'
-notes = []
 
 class MdExpand():
 
-    def verseInject(m):
+    def __init__(self):
+        self.notes = []
+    
+    def verseInject(self, m):
         verseBook = book
         ref=m.group(1)+":"+m.group(5)
         if m.group(4): # full-reference to other book
@@ -29,24 +31,19 @@ class MdExpand():
         else: # footnote
             foot = "[^"+verseBook+ref+"]"
             mdQuote = indent+str(quote)+"  "+"\n"+verseBook.capitalize()+" "+ref
-            notes.append(foot+":"+mdQuote+"\n")
+            self.notes.append(foot+":"+mdQuote+"\n")
             return m.group(1)+m.group(2) + foot
 
-    def expandVerse(line):
+    def expandVerse(self, line):
         replaced = line
         matched = True
         while matched:
             incoming = replaced
-            replaced = re.sub("^([0-9]+)(\\. [^!]+)(\\!+)V([_0-9A-Za-z]+:)?([0-9\\-]+)", MdExpand.verseInject, incoming, flags=re.IGNORECASE | re.MULTILINE)
+            replaced = re.sub("^([0-9]+)(\\. [^!]+)(\\!+)V([_0-9A-Za-z]+:)?([0-9\\-]+)", 
+                self.verseInject, incoming, flags=re.IGNORECASE | re.MULTILINE)
             matched = replaced != incoming
         return replaced
 
-    def findRef(line):
-        # https://docs.python.org/3/library/re.html
-        m = re.match("(([0-9])+\\. .+) !V([0-9\\-]+)", line) #"1. test !V19"
-        if m:
-            ref=m.group(1)+":"+m.group(2)
-            return ref;
 
 class MdDoc():
 
@@ -55,12 +52,13 @@ class MdDoc():
 
     def refsReplace(self):
         lines = []
+        expander = MdExpand(self)
         for line in self.lines:
-            lines.append(MdExpand.expandVerse(line))
+            lines.append(expander.expandVerse(line))
         self.lines = lines
-        if (len(notes) > 0):
+        if (len(expander.notes) > 0):
             self.lines += '\n'
-        self.lines += notes;
+        self.lines += expander.notes;
 
 
 class MdFile():
