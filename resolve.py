@@ -3,8 +3,6 @@ import sys, re
 from pathlib import Path
 import gateway
 
-style = 'inline' # or 'notes'
-
 class MdExpand():
 
     def __init__(self):
@@ -59,6 +57,10 @@ class MdDoc():
         if (len(expander.notes) > 0):
             self.lines += '\n'
         self.lines += expander.notes;
+    
+    def print(self):
+        for line in self.lines:
+            print(line)
 
 
 class MdFile():
@@ -95,5 +97,4 @@ if len(sys.argv) > 1:
     if len(sys.argv) > 2 and sys.argv[2] == "-i":
         mdFile.write(doc.lines)
     else:
-        for line in doc.lines:
-            print(line)
+        doc.print()
