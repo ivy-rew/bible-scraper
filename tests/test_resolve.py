@@ -37,5 +37,20 @@ class TestMarkdownResolver(unittest.TestCase):
     def test_bookOfFile(self):
         self.assertEqual(resolve.bookOfFile("tests/1-genesis.md"), 'genesis')
 
+    def test_fileInject(self):
+        md = resolve.MdFile("tests/1-genesis.md")
+        doc = resolve.MdDoc(md.read())
+        doc.refsReplace()
+        expect = resolve.MdFile("tests/1-genesis-resolved.md")
+        
+        expLines = expect.read()
+        self.assertEqual(doc.lines[0], expLines[0])
+        self.assertEqual(doc.lines[1], expLines[1])
+        self.assertEqual(doc.lines[2], expLines[2])
+        #self.assertEqual(doc.lines[3], expLines[3])
+        self.assertEqual(doc.lines[4], expLines[4])
+        #self.assertEqual(doc.lines[5], expLines[5])
+
+
 if __name__ == '__main__':
     unittest.main()

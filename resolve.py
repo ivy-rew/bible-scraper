@@ -50,13 +50,13 @@ class MdDoc():
 
     def refsReplace(self):
         lines = []
-        expander = MdExpand(self)
+        expander = MdExpand()
         for line in self.lines:
             lines.append(expander.expandVerse(line))
-        self.lines = lines
         if (len(expander.notes) > 0):
-            self.lines += '\n'
-        self.lines += expander.notes;
+           lines += '\n'
+        self.lines = lines
+        self.lines += expander.notes
     
     def print(self):
         for line in self.lines:
@@ -69,8 +69,8 @@ class MdFile():
         self.path = path
 
     def read(self):
-        with open(self.path, 'r') as file:
-            return file.readlines();
+        with open(self.path, 'r', encoding='utf-8') as file:
+            return file.readlines()
         
     def write(self, lines):
         with open(self.path, 'w', encoding='utf-8') as file: 
@@ -91,7 +91,7 @@ if len(sys.argv) > 1:
     mdPath = sys.argv[1]
     book = bookOfFile(mdPath)
     mdFile = MdFile(mdPath)
-    doc = MdDoc(mdFile.read())    
+    doc = MdDoc(mdFile.read())
     doc.refsReplace()
 
     if len(sys.argv) > 2 and sys.argv[2] == "-i":
