@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-import gateway
+from scraper import gateway
 
 if len(sys.argv) > 1:
     book = sys.argv[1];

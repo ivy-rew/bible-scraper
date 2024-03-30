@@ -1,5 +1,5 @@
 import unittest
-import resolve
+import scraper.resolve as resolve
 from unittest.mock import Mock
 
 resolve = resolve;

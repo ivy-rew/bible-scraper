@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys, re
 from pathlib import Path
-import gateway
+from scraper import gateway
 
 class MdExpand():
 
