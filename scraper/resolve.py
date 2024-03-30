@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys, re
 from pathlib import Path
-import gateway
+import scraper.gateway
 
 class MdExpand():
 
@@ -16,7 +16,7 @@ class MdExpand():
             if fullRefMatcher:
                 verseBook = fullRefMatcher.group(1)
                 ref = fullRefMatcher.group(2)+":"+m.group(5)
-        quote=gateway.lookup(verseBook, ref)
+        quote=scraper.gateway.lookup(verseBook, ref)
         if quote is None:
             print("gateway lookup failed for "+verseBook+" "+ref)
             return m.group(0)
