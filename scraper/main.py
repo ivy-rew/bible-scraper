@@ -21,7 +21,7 @@ ref=chapter_num;
 ref=ref+ ":" +verse_num
 
 #print("verse="+str(result.prettify()))
-result = gateway.lookup(book, ref)
+result = gateway.lookup(gateway.BibleRef(book, chapter_num, verse_num))
 
 print(result+"  ")
 print(book.capitalize()+" "+ref)

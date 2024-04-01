@@ -1,11 +1,11 @@
 from scraper import gateway
-from scraper.resolve import book
 
 
 import re
 
 
 class MdExpand():
+    
     book = "";
 
     def __init__(self):
@@ -14,12 +14,14 @@ class MdExpand():
     def verseInject(self, m):
         verseBook = MdExpand.book
         ref=m.group(1)+":"+m.group(5)
+        bRef = gateway.BibleRef(MdExpand.book, m.group(1), m.group(5))
         if m.group(4): # full-reference to other book
             fullRefMatcher = re.match("([0-9_]*[A-za-z]+)([0-9]+):", str(m.group(4)))
             if fullRefMatcher:
                 verseBook = fullRefMatcher.group(1)
                 ref = fullRefMatcher.group(2)+":"+m.group(5)
-        quote=gateway.lookup(verseBook, ref)
+                bRef = gateway.BibleRef(fullRefMatcher.group(1), fullRefMatcher.group(2), m.group(5))
+        quote=gateway.lookup(bRef)
         if quote is None:
             print("gateway lookup failed for "+verseBook+" "+ref)
             return m.group(0)
@@ -44,3 +46,6 @@ class MdExpand():
                 self.verseInject, incoming, flags=re.IGNORECASE | re.MULTILINE)
             matched = replaced != incoming
         return replaced
+    
+
+
