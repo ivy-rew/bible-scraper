@@ -4,7 +4,7 @@ from unittest.mock import Mock
 
 resolve = resolve;
 resolve.gateway = Mock()
-resolve.book = 'Genesis';
+resolve.MdExpand.book = 'Genesis';
 resolve.gateway.lookup.return_value = 'Im Anfang schuf Gott die Himmel und die Erde.'
 
 class TestMarkdownResolver(unittest.TestCase):

@@ -2,79 +2,9 @@
 import sys, re
 from pathlib import Path
 from scraper import gateway
-
-class MdExpand():
-
-    def __init__(self):
-        self.notes = []
-    
-    def verseInject(self, m):
-        verseBook = book
-        ref=m.group(1)+":"+m.group(5)
-        if m.group(4): # full-reference to other book
-            fullRefMatcher = re.match("([0-9_]*[A-za-z]+)([0-9]+):", str(m.group(4)))
-            if fullRefMatcher:
-                verseBook = fullRefMatcher.group(1)
-                ref = fullRefMatcher.group(2)+":"+m.group(5)
-        quote=gateway.lookup(verseBook, ref)
-        if quote is None:
-            print("gateway lookup failed for "+verseBook+" "+ref)
-            return m.group(0)
-        indent = "   > "
-        if m.group(3) == '!!': # full-quote; inlined
-            br = "  "
-            indent = " " + indent # 4whitspaces: in-between list content!
-            mdQuote = indent+str(quote)+br+"\n"+verseBook.capitalize()+" "+ref
-            return m.group(1)+m.group(2)+ '\n\n' + mdQuote + br + '\n'
-        else: # footnote
-            foot = "[^"+verseBook+ref+"]"
-            mdQuote = indent+str(quote)+"  "+"\n"+verseBook.capitalize()+" "+ref
-            self.notes.append(foot+":"+mdQuote+"\n")
-            return m.group(1)+m.group(2) + foot
-
-    def expandVerse(self, line):
-        replaced = line
-        matched = True
-        while matched:
-            incoming = replaced
-            replaced = re.sub("^([0-9]+)(\\. [^!]+)(\\!+)V([_0-9A-Za-z]+:)?([0-9\\-]+)", 
-                self.verseInject, incoming, flags=re.IGNORECASE | re.MULTILINE)
-            matched = replaced != incoming
-        return replaced
-
-
-class MdDoc():
-
-    def __init__(self, lines):
-        self.lines = lines
-
-    def refsReplace(self):
-        lines = []
-        expander = MdExpand()
-        for line in self.lines:
-            lines.append(expander.expandVerse(line))
-        if (len(expander.notes) > 0):
-           lines += '\n'
-        self.lines = lines
-        self.lines += expander.notes
-    
-    def print(self):
-        for line in self.lines:
-            print(line)
-
-
-class MdFile():
-
-    def __init__(self, path):
-        self.path = path
-
-    def read(self):
-        with open(self.path, 'r', encoding='utf-8') as file:
-            return file.readlines()
-        
-    def write(self, lines):
-        with open(self.path, 'w', encoding='utf-8') as file: 
-            file.writelines(lines)
+from scraper.MdDoc import MdDoc
+from scraper.MdFile import MdFile
+from scraper.MdExpand import MdExpand
 
 
 def bookOfFile(file):
@@ -89,7 +19,7 @@ def bookOfFile(file):
 #print(expandVerse('1. test !V19'))
 if len(sys.argv) > 1:
     mdPath = sys.argv[1]
-    book = bookOfFile(mdPath)
+    MdExpand.book = bookOfFile(mdPath)
     mdFile = MdFile(mdPath)
     doc = MdDoc(mdFile.read())
     doc.refsReplace()
