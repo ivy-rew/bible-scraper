@@ -9,44 +9,53 @@ from scraper.BibleRef import BibleRef
 class MdExpand():
     
     book = "";
-    chapter = "";
 
     def __init__(self):
         self.notes = []
 
-    def verseInject(self, m):
-        verseChap = MdExpand.chapter
-        verseChap = m.group(1)
-        bRef = BibleRef(MdExpand.book, verseChap, m.group(5))
-        if m.group(4): # full-reference to other book
-            fullRefMatcher = re.match("([0-9_]*[A-za-z]+)([0-9]+):", str(m.group(4)))
-            if fullRefMatcher:
-                bRef = BibleRef(fullRefMatcher.group(1), fullRefMatcher.group(2), m.group(5))
-        quote=gateway.lookup(bRef)
-        if quote is None:
-            print("gateway lookup failed for "+bRef.printRef())
-            return m.group(0)
+    def verseInject(self, bRef: BibleRef, quote, inline):
         indent = "   > "
-        if m.group(3) == '!!': # full-quote; inlined
+        if inline: # full-quote; inlined
             br = "  "
             indent = " " + indent # 4whitspaces: in-between list content!
             mdQuote = indent+str(quote)+br+"\n"+bRef.printRef()
-            return m.group(1)+m.group(2)+ '\n\n' + mdQuote + br + '\n'
+            return '\n\n' + mdQuote + br + '\n'
         else: # footnote
             foot = "[^"+bRef.book + bRef.numbers()+"]"
             mdQuote = indent+str(quote)+"  "+"\n"+bRef.printRef()
             self.notes.append(foot+":"+mdQuote+"\n")
-            return m.group(1)+m.group(2) + foot
+            return foot
 
     def expandVerse(self, line):
+        versPattern = "(\\!+)V([_0-9A-Za-z]+:)?([0-9\\-]+)"
         replaced = line
         matched = True
         while matched:
             incoming = replaced
-            replaced = re.sub("^([0-9]+)(\\. [^!]+)(\\!+)V([_0-9A-Za-z]+:)?([0-9\\-]+)",
-                self.verseInject, incoming, flags=re.IGNORECASE | re.MULTILINE)
+            self.line = incoming
+            replaced = re.sub(versPattern, self.expandVerseChap, incoming)
             matched = replaced != incoming
         return replaced
-    
+
+    def expandVerseChap(self, m):
+        verse = m.group(3)
+        bRef = BibleRef("", "", "")
+        if m.group(2): # full-reference to other book
+            fullRefMatcher = re.match("([0-9_]*[A-za-z]+)([0-9]+):", str(m.group(2)))
+            if fullRefMatcher:
+                bRef = BibleRef(fullRefMatcher.group(1), fullRefMatcher.group(2), verse)
+        else:
+            listMatch = re.match("^([0-9]+)(\\. [^!]+)", self.line)
+            if (listMatch.group(1)):
+                chapter = listMatch.group(1)
+                bRef = BibleRef(MdExpand.book, chapter, verse)
+        if (bRef.book != ""):
+            quote=gateway.lookup(bRef)
+            if quote is None:
+                print("gateway lookup failed for "+bRef.printRef())
+                return m.group(0)
+            inline = m.group(1) == '!!'
+            return self.verseInject(bRef, quote, inline)
+        return m.group(0)    
 
 

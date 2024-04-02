@@ -35,6 +35,12 @@ class TestMarkdownResolver(unittest.TestCase):
         expaned = expander.expandVerse('1. Himmel und Erde !!V1')
         self.assertEqual(expaned, '1. Himmel und Erde \n\n    > Im Anfang schuf Gott die Himmel und die Erde.  \nGenesis 1:1  \n')
 
+    def test_injectFootnotes_freeStyleDoc(self):
+        expander = exDef.MdExpand()
+        expaned = expander.expandVerse('Himmel und Erde !VGenesis1:1')
+        self.assertEqual(expaned, 'Himmel und Erde [^Genesis1:1]')
+        self.assertEqual(expander.notes[0], '[^Genesis1:1]:   > Im Anfang schuf Gott die Himmel und die Erde.  \nGenesis 1:1\n')
+
     def test_bookOfFile(self):
         self.assertEqual(resolve.bookOfFile("tests/1-genesis.md"), 'genesis')
 
