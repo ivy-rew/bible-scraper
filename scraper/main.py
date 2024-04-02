@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import sys
 from scraper import gateway
+from scraper.BibleRef import BibleRef
 
 if len(sys.argv) > 1:
     book = sys.argv[1];
@@ -21,7 +22,7 @@ ref=chapter_num;
 ref=ref+ ":" +verse_num
 
 #print("verse="+str(result.prettify()))
-result = gateway.lookup(gateway.BibleRef(book, chapter_num, verse_num))
+result = gateway.lookup(BibleRef(book, chapter_num, verse_num))
 
 print(result+"  ")
 print(book.capitalize()+" "+ref)

@@ -1,12 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-class BibleRef():
-
-    def __init__(self, book, chapter, verse):
-        self.book = book
-        self.chapter = chapter
-        self.verse = verse
+from scraper.BibleRef import BibleRef
 
 def lookup(bibRef: BibleRef):
     base_url = "https://www.biblegateway.com/passage/?search="
