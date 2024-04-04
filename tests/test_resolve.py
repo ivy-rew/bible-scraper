@@ -48,16 +48,23 @@ class TestMarkdownResolver(unittest.TestCase):
         md = resolve.MdFile("tests/1-genesis.md")
         doc = resolve.MdDoc(md.read())
         doc.refsReplace()
+        actual = sanitize(doc.lines)
         expect = resolve.MdFile("tests/1-genesis-resolved.md")
-        
         expLines = expect.read()
-        self.assertEqual(doc.lines[0], expLines[0])
-        self.assertEqual(doc.lines[1], expLines[1])
-        self.assertEqual(doc.lines[2], expLines[2])
-        #self.assertEqual(doc.lines[3], expLines[3])
-        self.assertEqual(doc.lines[4], expLines[4])
-        #self.assertEqual(doc.lines[5], expLines[5])
+        self.assertEqual(actual, expLines)
 
+    def test_fileInject_freeStyleDoc(self):
+        md = resolve.MdFile("tests/2-exodus.md")
+        doc = resolve.MdDoc(md.read())
+        doc.refsReplace()
+        actual = sanitize(doc.lines)
+        expect = resolve.MdFile("tests/2-exodus-resolved.md")
+        expLines = expect.read()
+        self.assertEqual(actual, expLines)
 
 if __name__ == '__main__':
     unittest.main()
+
+def sanitize(lines):
+    all = ''.join(lines)
+    return all.splitlines(keepends=True)
