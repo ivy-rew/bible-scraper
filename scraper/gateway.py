@@ -5,7 +5,7 @@ from scraper.BibleRef import BibleRef
 
 def lookup(bibRef: BibleRef):
     base_url = "https://www.biblegateway.com/passage/?search="
-    print("lookup "+str(bibRef.printRef))
+    print("lookup "+str(bibRef.printRef()))
     translation = "SCH2000"
     full_url = base_url + bibRef.book + "+" + bibRef.chapter + ":" + bibRef.verse + "&version=" + translation + "&interface=print"
 
