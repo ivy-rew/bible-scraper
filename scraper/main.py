@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import sys
+import sys, os
 from scraper import gateway
 from scraper.BibleRef import BibleRef
 
@@ -21,8 +21,12 @@ else:
 ref=chapter_num;
 ref=ref+ ":" +verse_num
 
-#print("verse="+str(result.prettify()))
+html = os.getenv("bibleAgent") == "html"
+if html:
+    gateway.plain = False
+
 result = gateway.lookup(BibleRef(book, chapter_num, verse_num))
 
 print(result+"  ")
-print(book.capitalize()+" "+ref)
+if not html:
+    print(book.capitalize()+" "+ref)
