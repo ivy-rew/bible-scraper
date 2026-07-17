@@ -47,7 +47,8 @@ class BibleRef():
         '1tim': '1 timothy', '2tim': '2 timothy',
         '1pet': '1 peter', '2pet': '2 peter',
         '1john': '1 john', '2john': '2 john', '3john': '3 john',
-        'jude': 'jude', 'rev': 'revelation'
+        'jude': 'jude', 'rev': 'revelation',
+        'phil': 'philippians'
     }
 
     def __init__(self, book, chapter, verse):

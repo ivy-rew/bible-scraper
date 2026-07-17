@@ -25,8 +25,11 @@ html = os.getenv("bibleAgent") == "html"
 if html:
     gateway.plain = False
 
-result = gateway.lookup(BibleRef(book, chapter_num, verse_num))
+bibRef = BibleRef(book, chapter_num, verse_num)
+result = gateway.lookup(bibRef)
 
 print(result+"  ")
 if not html:
-    print(book.capitalize()+" "+ref)
+    # Display the full book name (expanded from abbreviation) instead of original input
+    full_book_name = bibRef.book
+    print(full_book_name.capitalize()+" "+ref)

@@ -32,8 +32,8 @@ def lookupHtml(bibRef: BibleRef):
         if title_match:
             parsed_book = title_match.group(1).strip()
             # Update the BibleRef object with the parsed book name for display
+            # Only update book, not original_book, to preserve original input for CLI display
             bibRef.book = parsed_book
-            bibRef.original_book = parsed_book
     
     return page.text
 
