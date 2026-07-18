@@ -21,7 +21,7 @@ class MdExpand():
             mdQuote = indent+str(quote)+br+"\n"+bRef.printRef()
             return '\n\n' + mdQuote + br + '\n'
         else: # footnote
-            foot = "[^"+bRef.book + bRef.numbers()+"]"
+            foot = "[^"+bRef.original_book + bRef.numbers()+"]"
             mdQuote = indent+str(quote)+"  "+"\n"+bRef.printRef()
             self.notes.append(foot+":"+mdQuote+"\n")
             return foot
@@ -49,7 +49,7 @@ class MdExpand():
             if (listMatch.group(1)):
                 chapter = listMatch.group(1)
                 bRef = BibleRef(MdExpand.book, chapter, verse)
-        if (bRef.book != ""):
+        if (bRef.original_book != ""):
             quote=gateway.lookup(bRef)
             if quote is None:
                 print("gateway lookup failed for "+bRef.printRef())

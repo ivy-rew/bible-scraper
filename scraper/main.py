@@ -30,6 +30,4 @@ result = gateway.lookup(bibRef)
 
 print(result+"  ")
 if not html:
-    # Display the full book name (expanded from abbreviation) instead of original input
-    full_book_name = bibRef.book
-    print(full_book_name.capitalize()+" "+ref)
+    print(bibRef.book_full)

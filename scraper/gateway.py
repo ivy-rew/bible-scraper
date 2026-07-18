@@ -16,26 +16,16 @@ def lookupHtml(bibRef: BibleRef):
     if plain:
         print("lookup "+str(bibRef.printRef()))
     translation = "SCH2000"
-    full_url = base_url + bibRef.book + "+" + bibRef.chapter + ":" + bibRef.verse + "&version=" + translation + "&interface=print"
+    full_url = base_url + bibRef.original_book + "+" + bibRef.chapter + ":" + bibRef.verse + "&version=" + translation + "&interface=print"
 
     page = requests.get(full_url)
-    
-    # Parse book name from HTML response
-    soup = BeautifulSoup(page.text, "lxml")
-    title_tag = soup.find("title")
-    if title_tag:
-        title_text = title_tag.get_text()
-        # Extract book name from title (format: "Book Chapter:Verse Translation - ...")
-        # Example: "Genesis 1:1 SCH2000 - Die Urzeit: Von der Schöpfung bis - Bible Gateway"
-        import re
-        title_match = re.match(r'^([A-Za-z\s]+)\s+\d+:\d+\s+', title_text)
-        if title_match:
-            parsed_book = title_match.group(1).strip()
-            # Update the BibleRef object with the parsed book name for display
-            # Only update book, not original_book, to preserve original input for CLI display
-            bibRef.book = parsed_book
-    
+    bibRef.book_full = parseRev(page.text)
     return page.text
+
+def parseRev(html):
+    soup = BeautifulSoup(html, "lxml")
+    bibleRef = soup.find(class_="bcv");
+    return str(bibleRef.text.strip())
 
 def render(html, plain:bool):
     soup = BeautifulSoup(html, "lxml")
